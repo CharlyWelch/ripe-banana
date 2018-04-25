@@ -8,23 +8,25 @@ describe('reviewer api', () => {
 
     let reviewerA = {
         name: 'John',
-        company: 'johnreveiws.com'
+        company: 'johnreveiws.com',
+        email: 'john@john.com'
     };
 
     let reviewerB = {
         name: 'Smith',
-        company: 'smithreviews.com'
+        company: 'smithreviews.com',
+        email: 'smith@smith.com'
     };
 
     it('saves and gets reviewer', () => {
         return request.post('/reviewers')
             .send(reviewerA)
             .then(({ body }) => {
-                const { _id, __v } = body;
+                const { _id, __v, roles } = body;
                 assert.ok(_id);
                 assert.deepEqual(body, {
                     ...reviewerA,
-                    _id, __v  
+                    _id, __v, roles  
                 });
                 reviewerA = body;
             });

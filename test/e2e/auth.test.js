@@ -13,7 +13,9 @@ describe('Auth API', () => {
             .post('/auth/signup')
             .send({
                 email: 'hi@hiya.com',
-                password: '1234'
+                password: '1234',
+                company: 'review town',
+                roles: ['admin']
             })
             .then(({ body }) => token = body.token);
     });
