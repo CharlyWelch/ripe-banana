@@ -48,5 +48,21 @@ describe.only('Auth API', () => {
                 assert.ok(body.token);
             });
     });
+
+    it('Sends a 400 error if email already exists', () => {
+        return request
+            .post('/auth/signup')
+            .send({
+                name: 'TheDude',
+                email: 'hi@hiya.com',
+                password: '1234',
+                company: 'review town',
+                roles: []
+            })
+            .then(res => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.error, 'Email already in use');
+            });
+    });
 });
 
