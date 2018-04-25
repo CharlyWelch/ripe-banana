@@ -64,5 +64,21 @@ describe.only('Auth API', () => {
                 assert.equal(res.body.error, 'Email already in use');
             });
     });
+
+    it('Sends 401 on non-existent email', () => {
+        return request
+            .post('/auth/signin')
+            .send({
+                email: 'bye@hiya.com',
+                password: '1234',
+            })
+            .then(res => {
+                assert.equal(res.status, 401);
+                assert.equal(res.body.error, 'Invalid email or password');
+            });
+    });
+
+
+
 });
 
