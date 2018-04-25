@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 
-describe('Auth API', () => {
+describe.only('Auth API', () => {
     
     beforeEach(() => dropCollection('reviewers'));
 
@@ -15,9 +15,12 @@ describe('Auth API', () => {
                 email: 'hi@hiya.com',
                 password: '1234',
                 company: 'review town',
-                roles: ['admin']
+                roles: []
             })
-            .then(({ body }) => token = body.token);
+            .then(({ body }) => {
+                console.log('****************** body: ', body);
+                token = body.token;
+            });
     });
 
     it('signup', () => {
