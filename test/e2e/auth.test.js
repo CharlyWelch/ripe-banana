@@ -78,6 +78,19 @@ describe.only('Auth API', () => {
             });
     });
 
+    it('Sends 401 on bad password', () => {
+        return request
+            .post('/auth/signin')
+            .send({
+                email: 'hi@hiya.com',
+                password: '1111',
+            })
+            .then(res => {
+                assert.equal(res.status, 401);
+                assert.equal(res.body.error, 'Invalid email or password');
+            });
+    });
+
 
 
 });
