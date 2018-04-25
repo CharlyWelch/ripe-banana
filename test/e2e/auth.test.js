@@ -15,8 +15,11 @@ describe('Auth API', () => {
                 email: 'hi@hiya.com',
                 password: '1234'
             })
-            .then(({ body }) => token = body.token)
+            .then(({ body }) => token = body.token);
+    });
 
-    })
+    it('signup', () => {
+        assert.ok(token);
+    });
 });
 
