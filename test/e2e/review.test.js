@@ -1,11 +1,15 @@
 const { assert } = require('chai');
 const request = require('./request');
-const { dropCollection } = require('./db');
+const { dropCollection, createToken } = require('./db');
 const { Types } = require('mongoose');
 const Film = require('../../lib/models/Film');
 
 describe('review tests', () => {
     before(() => dropCollection('reviews'));
+    before(() => dropCollection('reviewers'));
+
+    let token = '';
+    before(() => createToken().then(t => token = t));
 
     let reviewA = {
         rating: 5,
@@ -40,6 +44,7 @@ describe('review tests', () => {
 
     it('saves and gets review', () => {
         return request.post('/reviews')
+            .set('Authorization', token)
             .send(reviewA)
             .then(({ body }) => {
                 const { _id, __v, updatedAt, createdAt } = body;
