@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 const request = require('./request');
-const { dropCollection, createToken } = require('./db');
+const { dropCollection } = require('./db');
 const { Types } = require('mongoose');
 const Film = require('../../lib/models/Film');
 
@@ -9,7 +9,14 @@ describe('review tests', () => {
     before(() => dropCollection('reviewers'));
 
     let token = '';
-    before(() => createToken().then(t => token = t));
+
+    const reviewer = {
+        name: 'Guy',
+        company: 'guytalksmovies',
+        email: 'guy@guy.com',
+        password: '1234',
+        roles: ['admin']
+    };
 
     let reviewA = {
         rating: 5,
@@ -30,6 +37,16 @@ describe('review tests', () => {
         released: 1995,
         cast: [],
     };
+
+    before(() => {
+        return request.post('/auth/signup')
+            .send(reviewer)
+            .then(({ body }) => {
+                console.log('****** body: ', body);
+                reviewer._id = body._id;
+                token = body.token;
+            });
+    });
 
     const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
 
@@ -60,6 +77,7 @@ describe('review tests', () => {
     it('returns all the reviews', () => {
         return request.get('/reviews')
             .then(({ body }) => {
+                console.log('**************** Body: ', body);
                 // const { _id, name } = reviewA;
                 assert.equal(body[0].film.title, 'ToyStory');
             });
