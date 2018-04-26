@@ -19,7 +19,6 @@ describe.only('Auth API', () => {
                 roles: []
             })
             .then(({ body }) => {
-                console.log('****************** body: ', body);
                 token = body.token;
             });
     });
