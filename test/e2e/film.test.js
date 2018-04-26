@@ -46,6 +46,7 @@ describe('film api', () => {
 
     before(() => {
         return request.post('/auth/signup')
+            .set('Authorization', token)
             .send(reviewer)
             .then(({ body }) => {
                 reviewer._id = body._id;
@@ -54,7 +55,8 @@ describe('film api', () => {
     });
 
     before(() => {
-        return Studio.create(studio).then(roundTrip)
+        return Studio.create(studio)
+            .then(roundTrip)
             .then(saved => {
                 studio = saved;
                 film.studio = saved._id;
@@ -66,6 +68,7 @@ describe('film api', () => {
     it('saves and gets film', () => {
         film.studio = studio._id;
         return request.post('/films')
+            .set('Authorization', token)
             .send(film)
             .then(({ body }) => {
                 const { _id } = body;

@@ -4,7 +4,7 @@ const { dropCollection } = require('./db');
 const Studio = require('../../lib/models/Studio');
 const Film = require('../../lib/models/Film');
 
-describe.only('studio api', () => {
+describe('studio api', () => {
     before(() => dropCollection('studios'));
     before(() => dropCollection('reviewers'));
 
@@ -109,7 +109,6 @@ describe.only('studio api', () => {
     it('deletes a studio', () => {
         starWars.studio = studioB._id;
         return Film.create(starWars).then(roundTrip)
-            // .set('Authorization', token)
             .then(saved => {
                 starWars = saved;
             })

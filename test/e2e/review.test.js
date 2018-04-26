@@ -42,7 +42,6 @@ describe('review tests', () => {
         return request.post('/auth/signup')
             .send(reviewer)
             .then(({ body }) => {
-                console.log('****** body: ', body);
                 reviewer._id = body._id;
                 token = body.token;
             });

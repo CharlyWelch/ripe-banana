@@ -70,6 +70,7 @@ describe('actor api', () => {
                 actor = saved;
                 filmD.cast[0].actor = saved._id;
                 return request.post('/films')
+                    .set('Authorization', token)
                     .send(filmD);
             })
             .then(() => {
@@ -120,7 +121,6 @@ describe('actor api', () => {
 
     it('returns error trying to delete actor in film in DB', () => {
         return Film.create(film).then(roundTrip)
-            // .set('Authorization', token)
             .then(saved => {
                 film = saved;
             })
