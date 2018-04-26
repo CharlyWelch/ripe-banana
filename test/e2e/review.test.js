@@ -77,8 +77,6 @@ describe('review tests', () => {
     it('returns all the reviews', () => {
         return request.get('/reviews')
             .then(({ body }) => {
-                console.log('**************** Body: ', body);
-                // const { _id, name } = reviewA;
                 assert.equal(body[0].film.title, 'ToyStory');
             });
     });

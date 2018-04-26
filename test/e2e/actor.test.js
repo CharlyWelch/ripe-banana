@@ -5,10 +5,11 @@ const { dropCollection } = require('./db');
 const Actor = require('../../lib/models/Actor');
 const Film = require('../../lib/models/Film');
 
-describe('actor api', () => {
+describe.only('actor api', () => {
 
     before(() => dropCollection('actors'));
     before(() => dropCollection('films'));
+    before(() => dropCollection('reviewers'));
 
     let data = {
         name: 'Bob',
@@ -21,9 +22,28 @@ describe('actor api', () => {
         dob: '5/5/50',
         pob: 'Salem'
     };
+
+    let token = '';
+    const reviewer = {
+        name: 'Guy',
+        company: 'guytalksmovies',
+        email: 'guy@guy.com',
+        password: '1234',
+        roles: ['admin']
+    };
+
+    before(() => {
+        return request.post('/auth/signup')
+            .send(reviewer)
+            .then(({ body }) => {
+                reviewer._id = body._id;
+                token = body.token;
+            });
+    });
  
     it('saves and gets actor', () => {
         return request.post('/actors')
+            .set('Authorization', token)
             .send(data)
             .then(({ body }) => {
                 const { _id, __v, dob } = body;
@@ -71,6 +91,7 @@ describe('actor api', () => {
 
     it('deletes actor by id', () => {
         return request.delete(`/actors/${data._id}`)
+            .set('Authorization', token)
             .then(() => {
                 return Actor.findById(data._id);
             })
@@ -83,6 +104,7 @@ describe('actor api', () => {
         actor.name = 'William';
 
         return request.put(`/actors/${actor._id}`)
+            .set('Authorization', token)
             .send(actor)
             .then(({ body }) => {
                 assert.deepEqual(body, actor);
@@ -98,11 +120,13 @@ describe('actor api', () => {
 
     it('returns error trying to delete actor in film in DB', () => {
         return Film.create(film).then(roundTrip)
+            // .set('Authorization', token)
             .then(saved => {
                 film = saved;
             })
             .then(() => {
-                return request.delete(`/actors/${actor._id}`);
+                return request.delete(`/actors/${actor._id}`)
+                    .set('Authorization', token);
             })
             .then(result => {
                 assert.equal(result.status, 400);
