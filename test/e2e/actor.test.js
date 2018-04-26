@@ -5,7 +5,7 @@ const { dropCollection } = require('./db');
 const Actor = require('../../lib/models/Actor');
 const Film = require('../../lib/models/Film');
 
-describe.only('actor api', () => {
+describe('actor api', () => {
 
     before(() => dropCollection('actors'));
     before(() => dropCollection('films'));

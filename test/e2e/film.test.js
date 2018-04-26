@@ -10,6 +10,7 @@ describe('film api', () => {
 
     before(() => dropCollection('films'));
     before(() => dropCollection('studios'));
+    before(() => dropCollection('reviewers'));
 
     let studio = {
         name: 'MGM',
@@ -33,6 +34,24 @@ describe('film api', () => {
         released: 2000,
         cast: [{ part: 'vilian', actor: Types.ObjectId() }]
     };
+
+    let token = '';
+    const reviewer = {
+        name: 'Guy',
+        company: 'guytalksmovies',
+        email: 'guy@guy.com',
+        password: '1234',
+        roles: ['admin']
+    };
+
+    before(() => {
+        return request.post('/auth/signup')
+            .send(reviewer)
+            .then(({ body }) => {
+                reviewer._id = body._id;
+                token = body.token;
+            });
+    });
 
     before(() => {
         return Studio.create(studio).then(roundTrip)
